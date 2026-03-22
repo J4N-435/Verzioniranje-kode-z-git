@@ -6,7 +6,28 @@ using namespace std;
 
 
 void countingSortByBit(vector<unsigned char>& A, int k) {
-    // TODO
+    int n = A.size();
+    vector<unsigned char> B(n);
+
+    int C[2] = {0, 0};
+
+    // štetje
+    for (int i = 0; i < n; i++) {
+        int bit = (A[i] >> k) & 1;
+        C[bit]++;
+    }
+
+    // prefix sum
+    C[1] += C[0];
+
+        // stabilno razporejanje
+    for (int i = n - 1; i >= 0; i--) {
+        int bit = (A[i] >> k) & 1;
+        B[--C[bit]] = A[i];
+    }
+
+    // kopiraj nazaj
+    A = B;
 }
 
 
