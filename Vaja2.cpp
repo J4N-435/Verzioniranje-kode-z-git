@@ -32,7 +32,9 @@ void countingSortByBit(vector<unsigned char>& A, int k) {
 
 
 void binaryRadixSort(vector<unsigned char>& A) {
-    // TODO
+    for (int k = 1; k < 8; k++) {
+        countingSortByBit(A, k);
+    }
 }
 
 int main(int argc, char* argv[]) {
