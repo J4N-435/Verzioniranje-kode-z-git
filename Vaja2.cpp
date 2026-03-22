@@ -32,7 +32,7 @@ void countingSortByBit(vector<unsigned char>& A, int k) {
 
 
 void binaryRadixSort(vector<unsigned char>& A) {
-    for (int k = 1; k < 8; k++) {
+    for (int k = 0; k < 8; k++) {
         countingSortByBit(A, k);
     }
 }
