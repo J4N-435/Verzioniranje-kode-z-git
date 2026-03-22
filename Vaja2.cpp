@@ -68,7 +68,8 @@ int main(int argc, char* argv[]) {
     ofstream out("out.txt");
 
     for (size_t i = 0; i < A.size(); i++) {
-        // TODO
+        out << (int)A[i];
+        if (i != A.size() - 1) out << " ";
     }
 
     out.close();
