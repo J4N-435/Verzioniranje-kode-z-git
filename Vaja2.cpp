@@ -55,7 +55,9 @@ int main(int argc, char* argv[]) {
     int x;
 
     while (in >> x) {
-        // TODO
+        if (x >= 0 && x <= 255) {
+            A.push_back((unsigned char)x);
+        }
     }
 
     in.close();
@@ -66,7 +68,8 @@ int main(int argc, char* argv[]) {
     ofstream out("out.txt");
 
     for (size_t i = 0; i < A.size(); i++) {
-        // TODO
+        out << (int)A[i];
+        if (i != A.size() - 1) out << " ";
     }
 
     out.close();
