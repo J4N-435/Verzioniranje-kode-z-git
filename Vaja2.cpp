@@ -55,7 +55,9 @@ int main(int argc, char* argv[]) {
     int x;
 
     while (in >> x) {
-        // TODO
+        if (x >= 0 && x <= 255) {
+            A.push_back((unsigned char)x);
+        }
     }
 
     in.close();
