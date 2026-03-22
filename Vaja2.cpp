@@ -19,6 +19,15 @@ void countingSortByBit(vector<unsigned char>& A, int k) {
 
     // prefix sum
     C[1] += C[0];
+
+        // stabilno razporejanje
+    for (int i = n - 1; i >= 0; i--) {
+        int bit = (A[i] >> k) & 1;
+        B[--C[bit]] = A[i];
+    }
+
+    // kopiraj nazaj
+    A = B;
 }
 
 
