@@ -8,18 +8,23 @@ on:
 
 jobs:
   build_and_push:
-    # ce je CI Testiranje uspelo
+    # Zaženi samo, če je CI Testiranje uspelo
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: self-hosted
     
     steps:
-      - uses: actions/checkout@v4
+      - name: Prevzem kode
+        uses: actions/checkout@v4
 
       - name: Prijava v DockerHub
+        # Uporabimo sudo, da se poverilnice shranijo v root kontekst za kasnejši push
         run: |
           echo "${{ secrets.DOCKERHUB_TOKEN }}" | sudo docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
 
       - name: Build in Push
         run: |
+          # Zgradimo sliko (pika na koncu je nujna!)
           sudo docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/vaja2-algoritmi:latest .
+          
+          # Pošljemo sliko v DockerHub
           sudo docker push ${{ secrets.DOCKERHUB_USERNAME }}/vaja2-algoritmi:latest
