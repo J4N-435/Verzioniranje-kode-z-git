@@ -1,0 +1,24 @@
+name: CD Dostava na DockerHub
+
+on:
+  workflow_run:
+    workflows: ["CI Testiranje"]
+    types: [completed]
+    branches: [main]
+
+jobs:
+  build_and_push:
+    # ce je CI Testiranje uspelo
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: self-hosted
+    
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Prijava v DockerHub
+        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
+      - name: Build in Push
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/vaja2-algoritmi:latest .
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/vaja2-algoritmi:latest

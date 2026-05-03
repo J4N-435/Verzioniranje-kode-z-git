@@ -1,0 +1,59 @@
+name: CI Testiranje
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  preveri_teste:
+    runs-on: self-hosted
+    outputs:
+      status_napake: ${{ steps.check.outputs.error_found }}
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Preveri obstoj testne skripte
+        id: check
+        run: |
+          # Poskusimo najti datoteko. Če je ni, ls vrne napako v napaka.txt
+          ls tests/my_test.py > /dev/null 2> napaka.txt
+          
+          if [ -s napaka.txt ]; then
+            echo "error_found=true" >> $GITHUB_OUTPUT
+          else
+            echo "error_found=false" >> $GITHUB_OUTPUT
+          fi
+          
+      - name: Shrani artefakt
+        uses: actions/upload-artifact@v4
+        with:
+          name: log-napake
+          path: napaka.txt
+
+  izvedi_teste:
+    needs: preveri_teste
+    runs-on: self-hosted
+    strategy:
+      matrix:
+        compiler: [g++] # Tukaj je matrica 
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Prenos artefakta
+        uses: actions/download-artifact@v4
+        with:
+          name: log-napake
+
+      - name: Preveri vsebino napaka.txt
+        run: |
+          if [ -s napaka.txt ]; then
+            echo "Kritična napaka v prejšnjem koraku:"
+            cat napaka.txt
+            exit 1
+          fi
+
+      - name: Prevajanje in tek testov
+        run: |
+          ${{ matrix.compiler }} Vaja2.cpp -o vaja2
+          python3 tests/my_test.py
